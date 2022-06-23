@@ -10,27 +10,30 @@
 #pragma comment (lib, "ws2_32.lib")
 using namespace std;
 
+
+//const string Rules[12] = { "SELECT Country_Name FROM Country_population;", "SELECT Country_Name, Population FROM	Country_population;",
+//							"SELECT Country_Name, Predicted_population FROM	Country_population;","SELECT Country_Name, Population, Predicted_population FROM	Country_population;"
+//							"SELECT ID, Country_Name FROM Country_population;" };
+//bool FirewallAccepted = false;
 string query;
 int fn_data::callback(void* data/*data provided in 4th argument*/, int RowNum/*num collums in row*/, char** Fields/*feilds in row*/, char** ColName/*collum names*/)
 {
-	
 	int i;
 	if (query.size() == 0)
 	{
-		query += (ColName, "\r\n");
+		query += (ColName, "\n");
 	}
 
 	for (i = 0; i < RowNum; i++) {
-		query += ("%s = %s \r\n", ColName[i], Fields[i] ? Fields[i] : " ");
-		query += " \r\n";
+		query += ("%s = %s \n", ColName[i], Fields[i] ? Fields[i] : " ");
+		query += " \n";
 	}
-	query += "\r\n";
+	query += " \n";
 	return 0;
 }
 
 string fn_data::SQL_Query(string userQuery)
 {
-	query = "";
 	sqlite3* DB;
 	int exit = 0;
 	exit = sqlite3_open("Data.db", &DB);

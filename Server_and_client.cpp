@@ -12,7 +12,7 @@ using namespace std;
 
 
 const string Rules[12] = { "SELECT Country_Name FROM Country_population;", "SELECT Country_Name, Population FROM	Country_population;",
-							"SELECT Country_Name, Predicted_population FROM	Country_population;","SELECT Country_Name, Population, Predicted_population FROM	Country_population;",
+							"SELECT Country_Name, Predicted_population FROM	Country_population;","SELECT Country_Name, Population, Predicted_population FROM	Country_population;"
 							"SELECT ID, Country_Name FROM Country_population;" };
 bool FirewallAccepted = false;
 string querymain;
@@ -61,7 +61,11 @@ void functions::connect_client(SOCKET listening)
 	}
 	
 	while (true)
-	{		
+	{
+
+		//ZeroMemory(buf, 4096);
+		//SOCKET packetcheck = recvfrom(listening, buf, 4096, 0, 0, 0);
+		// check against firewall
 		int bytesRecived = recv(clientsocket, buf, 4096, 0);
 		if (bytesRecived == SOCKET_ERROR)
 		{
@@ -74,13 +78,16 @@ void functions::connect_client(SOCKET listening)
 			break;
 		}
 		if(bytesRecived >  0)
-		{		 	
-			firewall(buf);			
+		{
+		 	
+			firewall(buf);
+			
 		}
 		
 		if (FirewallAccepted == true)
-		{			
-			querymain += fn.SQL_Query(buf);
+		{
+			
+			querymain = fn.SQL_Query(buf);
 			char* returnquery = const_cast<char*> (querymain.c_str());
 			send(clientsocket, returnquery, strlen(returnquery), 0);
 			returnquery = NULL;
@@ -93,10 +100,11 @@ void functions::connect_client(SOCKET listening)
 			send(clientsocket, returnquery, strlen(returnquery), 0);
 			querymain = "";		
 			FirewallAccepted = false;
-		}	
+		}
+		
 		
 	}
-	
+	closesocket(listening);
 	closesocket(clientsocket);
 }
 void functions::firewall(string Packet)
@@ -104,7 +112,7 @@ void functions::firewall(string Packet)
 
 	for (int i = 0; i < sizeof(Rules); i++)
 	{
-		if (Rules[i] == Packet && Rules[i] != "")
+		if (Rules[i] == Packet /*&& Rules[i] != ""*/)
 		{
 			FirewallAccepted = true;
 			break;
@@ -112,16 +120,16 @@ void functions::firewall(string Packet)
 	}
 	if (FirewallAccepted == true)
 	{
-		querymain += " your packet was accepted\r\n";
+		querymain += " your packet was accepted\n\n";
 		cout << "packet was accepted\n" << endl;;
 	}
 	else if (FirewallAccepted == false)
 	{
-		querymain += " your packet was not accepted\r\n";
+		querymain += " your packet was not accepted\n\n";
 		cout << "packet was not accepted\n" << endl;
 	}
 
-	
+
 }
 
 
