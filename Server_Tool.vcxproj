@@ -21,13 +21,15 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\Downloads\sqlite-amalgamation-3380000\sqlite-amalgamation-3380000\sqlite3.c" />
     <ClCompile Include="..\Tool_Server-20220103T114407Z-001\Tool_Server\Tool_Server\Server.cpp" />
-    <ClCompile Include="Server_and_database.cpp" />
+    <ClCompile Include="Firewall_and_database.cpp" />
+    <ClCompile Include="Server_and_client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Server_and_database.h" />
+    <ClInclude Include="Firewall_and_database.h" />
+    <ClInclude Include="Server_and_client.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
